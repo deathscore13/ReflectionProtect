@@ -16,6 +16,24 @@ abstract class ReflectionProtect
      */
     public static function method(bool $throw = false): void
     {
+        static $exist = null;
+
+        if ($exist === false)
+            return;
+        
+        if ($exist === null)
+        {
+            if (extension_loaded('Reflection') || @dl((PHP_SHLIB_SUFFIX === 'so' ? '' : 'php_').'reflection.'.PHP_SHLIB_SUFFIX))
+            {
+                $exist = true;
+            }
+            else
+            {
+                $exist = false;
+                return;
+            }
+        }
+
         $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         if (isset($bt[2]['class']) && $bt[2]['class'] === 'ReflectionMethod')
         {
