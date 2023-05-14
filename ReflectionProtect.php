@@ -63,7 +63,7 @@ trait ReflectionProtectObjectPrivate
 		
 		static $var = [];
 		
-		if (func_num_args() == 2)
+		if (func_num_args() === 2)
 			$var[$name] = $value;
 		else if (!isset($var[$name]))
 			throw new Exception('Undefined variable $'.$name);
@@ -88,7 +88,7 @@ trait ReflectionProtectObjectProtected
 		
 		static $var = [];
 		
-		if (func_num_args() == 2)
+		if (func_num_args() === 2)
 			$var[$name] = $value;
 		else if (!isset($var[$name]))
 			throw new Exception('Undefined variable $'.$name);
@@ -113,7 +113,7 @@ trait ReflectionProtectStaticPrivate
 		
 		static $var = [];
 		
-		if (func_num_args() == 2)
+		if (func_num_args() === 2)
 			$var[$name] = $value;
 		else if (!isset($var[$name]))
 			throw new Exception('Undefined variable $'.$name);
@@ -138,7 +138,7 @@ trait ReflectionProtectStaticProtected
 		
 		static $var = [];
 		
-		if (func_num_args() == 2)
+		if (func_num_args() === 2)
 			$var[$name] = $value;
 		else if (!isset($var[$name]))
 			throw new Exception('Undefined variable $'.$name);
