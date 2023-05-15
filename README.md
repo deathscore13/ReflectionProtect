@@ -3,7 +3,7 @@
 
 `ReflectionProtect::method()` существует сам по себе, отдельно от трейтов для подключения проперти<br><br>
 Так как у `__pv()`, `__pt()`, `__pvs()` и `__pts()` разный буфер, то можно использовать одинаковые имена переменных<br><br>
-Советую открыть **`ReflectionProtect.php`** и почитать описания `ReflectionProtect::method()`, `__pv()`, `__pt()`, `__pvs()` и `__pts()`
+Советую открыть **`ReflectionProtect.php`** и почитать описания `ReflectionProtect::method()`, `__pvThrow()`, `__pv()`, `__ptThrow()`, `__pt()`, `__pvsThrow()`, `__pvs()`, `__ptsThrow()` и `__pts()`
 
 <br><br>
 ## Подключение проперти
@@ -27,6 +27,9 @@ class BaseClass
 
     public function __construct()
     {
+        // при обнаружении вызова __pv() через Reflection API скрипт завершится
+        $this->__pvThrow(false);
+
         // инициализация объектного проперти
         $this->__pv('var1', 0);
     }
@@ -34,6 +37,9 @@ class BaseClass
     // для инициализации статических проперти придётся сделать отдельную функцию
     public static function __init()
     {
+        // при обнаружении вызова __pvs() через Reflection API функция вернёт исключение
+        $this->__pvThrow(true);
+
         // инициализация статического проперти
         self::__pvs('var2', 2);
     }

@@ -10,7 +10,7 @@
 abstract class ReflectionProtect
 {
     /**
-     * Защита вызова метода через ReflectionMethod
+     * Защита вызова метода через Reflection API
      * 
      * @param bool $throw       false чтобы завершить скрипт, true чтобы вернуть исключение
      */
@@ -50,6 +50,24 @@ abstract class ReflectionProtect
 trait ReflectionProtectObjectPrivate
 {
     /**
+     * Установка поведения при обнаружении вызова __pv() через Reflection API
+     * По умолчанию - false
+     * 
+     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
+     * 
+     * @return bool             Текущее значение
+     */
+    private function __pvThrow(bool $value = false): bool
+    {
+        static $throw = false;
+
+        if (func_num_args())
+            $throw = $value;
+        
+        return $throw;
+    }
+
+    /**
      * Установка/получение private переменной
      * 
      * @param string $name      Имя переменной
@@ -59,7 +77,7 @@ trait ReflectionProtectObjectPrivate
      */
 	private function &__pv(string $name, mixed $value = 0): mixed
 	{
-		ReflectionProtect::method();
+		ReflectionProtect::method($this->__pvThrow());
 		
 		static $var = [];
 		
@@ -75,6 +93,24 @@ trait ReflectionProtectObjectPrivate
 trait ReflectionProtectObjectProtected
 {
     /**
+     * Установка поведения при обнаружении вызова __pt() через Reflection API
+     * По умолчанию - false
+     * 
+     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
+     * 
+     * @return bool             Текущее значение
+     */
+    protected function __ptThrow(bool $value = false): bool
+    {
+        static $throw = false;
+
+        if (func_num_args())
+            $throw = $value;
+        
+        return $throw;
+    }
+
+    /**
      * Установка/получение protected переменной
      * 
      * @param string $name      Имя переменной
@@ -84,7 +120,7 @@ trait ReflectionProtectObjectProtected
      */
 	protected function &__pt(string $name, mixed $value = 0): mixed
 	{
-		ReflectionProtect::method();
+		ReflectionProtect::method($this->__ptThrow());
 		
 		static $var = [];
 		
@@ -100,6 +136,24 @@ trait ReflectionProtectObjectProtected
 trait ReflectionProtectStaticPrivate
 {
     /**
+     * Установка поведения при обнаружении вызова __pvs() через Reflection API
+     * По умолчанию - false
+     * 
+     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
+     * 
+     * @return bool             Текущее значение
+     */
+    private static function __pvsThrow(bool $value = false): bool
+    {
+        static $throw = false;
+
+        if (func_num_args())
+            $throw = $value;
+        
+        return $throw;
+    }
+
+    /**
      * Установка/получение статической private переменной
      * 
      * @param string $name      Имя переменной
@@ -109,7 +163,7 @@ trait ReflectionProtectStaticPrivate
      */
 	private static function &__pvs(string $name, mixed $value = 0): mixed
 	{
-		ReflectionProtect::method();
+		ReflectionProtect::method(self::__pvsThrow());
 		
 		static $var = [];
 		
@@ -125,6 +179,24 @@ trait ReflectionProtectStaticPrivate
 trait ReflectionProtectStaticProtected
 {
     /**
+     * Установка поведения при обнаружении вызова __pts() через Reflection API
+     * По умолчанию - false
+     * 
+     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
+     * 
+     * @return bool             Текущее значение
+     */
+    protected static function __ptsThrow(bool $value = false): bool
+    {
+        static $throw = false;
+
+        if (func_num_args())
+            $throw = $value;
+        
+        return $throw;
+    }
+
+    /**
      * Установка/получение статической protected переменной
      * 
      * @param string $name      Имя переменной
@@ -134,7 +206,7 @@ trait ReflectionProtectStaticProtected
      */
 	protected static function &__pts(string $name, mixed $value = 0): mixed
 	{
-		ReflectionProtect::method();
+		ReflectionProtect::method(self::__ptsThrow());
 		
 		static $var = [];
 		
