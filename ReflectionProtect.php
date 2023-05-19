@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ReflectionProtect
+ * ReflectionProtect 1.0.0
  * 
  * Защита от Reflection API в private/protected методах и проперти для PHP 8.0.0+
  * https://github.com/deathscore13/ReflectionProtect
