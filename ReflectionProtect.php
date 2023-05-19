@@ -23,7 +23,7 @@ abstract class ReflectionProtect
         
         if ($exist === null)
         {
-            if (extension_loaded('Reflection') || @dl((PHP_SHLIB_SUFFIX === 'so' ? '' : 'php_').'reflection.'.PHP_SHLIB_SUFFIX))
+            if (extension_loaded('reflection') || @dl((PHP_SHLIB_SUFFIX === 'so' ? '' : 'php_').'reflection.'.PHP_SHLIB_SUFFIX))
             {
                 $exist = true;
             }
