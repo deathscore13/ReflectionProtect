@@ -137,10 +137,11 @@ trait ReflectionProtectObjectProtected
 		ReflectionProtect::method($this->__ptThrow());
 		
 		static $var = [];
+        $id = spl_object_id($this);
 		
 		if (func_num_args() === 2)
         {
-			$var[$name] = $value;
+			$var[$id][$name] = $value;
         }
         else if ($destroy)
         {
@@ -149,12 +150,12 @@ trait ReflectionProtectObjectProtected
 
             return $buffer;
         }
-		else if (!isset($var[$name]))
+		else if (!isset($var[$id][$name]))
         {
 			throw new Exception('Undefined property '.self::class.'::$'.$name);
         }
 		
-		return $var[$name];
+		return $var[$id][$name];
 	}
 }
 
