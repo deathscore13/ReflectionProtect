@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ReflectionProtect 1.0.0
+ * ReflectionProtect
  * 
  * Защита от Reflection API в private/protected методах и проперти для PHP 8.0.0+
  * https://github.com/deathscore13/ReflectionProtect
@@ -68,25 +68,38 @@ trait ReflectionProtectObjectPrivate
     }
 
     /**
-     * Установка/получение private переменной
+     * Установка/получение private проперти
      * 
-     * @param string $name      Имя переменной
-     * @param mixed $value      Если параметр указан, то установит переменной новое значение
+     * @param string $name      Имя проперти
+     * @param mixed $value      Если параметр указан, то установит новое значение
+     * @param bool $destroy     Удаление всех проперти для текущего объекта. НЕОБХОДИМО вызвать в __destruct()
      * 
-     * @return mixed            Значение переменной
+     * @return mixed            Значение проперти. При $destroy = true вернёт массив уничтоженных элементов
      */
-	private function &__pv(string $name, mixed $value = 0): mixed
+	private function &__pv(string $name, mixed $value = 0, bool $destroy = false): mixed
 	{
 		ReflectionProtect::method($this->__pvThrow());
 		
 		static $var = [];
+        $id = spl_object_id($this);
 		
 		if (func_num_args() === 2)
-			$var[$name] = $value;
-		else if (!isset($var[$name]))
-			throw new Exception('Undefined variable $'.$name);
+        {
+			$var[$id][$name] = $value;
+        }
+        else if ($destroy)
+        {
+            $buffer = $var[$id];
+            unset($var[$id]);
+
+            return $buffer;
+        }
+		else if (!isset($var[$id][$name]))
+        {
+			throw new Exception('Undefined property '.self::class.'::$'.$name);
+        }
 		
-		return $var[$name];
+		return $var[$id][$name];
 	}
 }
 
@@ -111,23 +124,35 @@ trait ReflectionProtectObjectProtected
     }
 
     /**
-     * Установка/получение protected переменной
+     * Установка/получение protected проперти
      * 
-     * @param string $name      Имя переменной
-     * @param mixed $value      Если параметр указан, то установит переменной новое значение
+     * @param string $name      Имя проперти
+     * @param mixed $value      Если параметр указан, то установит новое значение
+     * @param bool $destroy     Удаление всех проперти для текущего объекта. НЕОБХОДИМО вызвать в __destruct()
      * 
-     * @return mixed            Значение переменной
+     * @return mixed            Значение проперти. При $destroy = true вернёт массив уничтоженных элементов
      */
-	protected function &__pt(string $name, mixed $value = 0): mixed
+	protected function &__pt(string $name, mixed $value = 0, bool $destroy = false): mixed
 	{
 		ReflectionProtect::method($this->__ptThrow());
 		
 		static $var = [];
 		
 		if (func_num_args() === 2)
+        {
 			$var[$name] = $value;
+        }
+        else if ($destroy)
+        {
+            $buffer = $var[$id];
+            unset($var[$id]);
+
+            return $buffer;
+        }
 		else if (!isset($var[$name]))
-			throw new Exception('Undefined variable $'.$name);
+        {
+			throw new Exception('Undefined property '.self::class.'::$'.$name);
+        }
 		
 		return $var[$name];
 	}
@@ -154,12 +179,12 @@ trait ReflectionProtectStaticPrivate
     }
 
     /**
-     * Установка/получение статической private переменной
+     * Установка/получение статической private проперти
      * 
-     * @param string $name      Имя переменной
-     * @param mixed $value      Если параметр указан, то установит переменной новое значение
+     * @param string $name      Имя проперти
+     * @param mixed $value      Если параметр указан, то установит новое значение
      * 
-     * @return mixed            Значение переменной
+     * @return mixed            Значение проперти
      */
 	private static function &__pvs(string $name, mixed $value = 0): mixed
 	{
@@ -170,7 +195,7 @@ trait ReflectionProtectStaticPrivate
 		if (func_num_args() === 2)
 			$var[$name] = $value;
 		else if (!isset($var[$name]))
-			throw new Exception('Undefined variable $'.$name);
+			throw new Exception('Undefined property '.self::class.'::$'.$name);
 		
 		return $var[$name];
 	}
@@ -197,12 +222,12 @@ trait ReflectionProtectStaticProtected
     }
 
     /**
-     * Установка/получение статической protected переменной
+     * Установка/получение статической protected проперти
      * 
-     * @param string $name      Имя переменной
-     * @param mixed $value      Если параметр указан, то установит переменной новое значение
+     * @param string $name      Имя проперти
+     * @param mixed $value      Если параметр указан, то установит новое значение
      * 
-     * @return mixed            Значение переменной
+     * @return mixed            Значение проперти
      */
 	protected static function &__pts(string $name, mixed $value = 0): mixed
 	{
@@ -213,7 +238,7 @@ trait ReflectionProtectStaticProtected
 		if (func_num_args() === 2)
 			$var[$name] = $value;
 		else if (!isset($var[$name]))
-			throw new Exception('Undefined variable $'.$name);
+			throw new Exception('Undefined property '.self::class.'::$'.$name);
 		
 		return $var[$name];
 	}

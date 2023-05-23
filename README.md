@@ -1,8 +1,9 @@
-# ReflectionProtect 1.0.0
+# ReflectionProtect
 ### Защита от Reflection API в private/protected методах и проперти для PHP 8.0.0+<br><br>
 
 `ReflectionProtect::method()` существует сам по себе, отдельно от трейтов для подключения проперти<br><br>
-Так как у `__pv()`, `__pt()`, `__pvs()` и `__pts()` разный буфер, то можно использовать одинаковые имена переменных<br><br>
+Так как у `__pv()`, `__pt()`, `__pvs()` и `__pts()` разный буфер, то можно использовать одинаковые имена проперти<br><br>
+**ОБРАТИТЕ ВНИМАНИЕ, что для объектных private/protected проперти нужно вызывать `__pv('', 0, true)`/`__pt('', 0, true)` в `__destruct()`**<br><br>
 Советую открыть **`ReflectionProtect.php`** и почитать описания `ReflectionProtect::method()`, `__pvThrow()`, `__pv()`, `__ptThrow()`, `__pt()`, `__pvsThrow()`, `__pvs()`, `__ptsThrow()` и `__pts()`
 
 <br><br>
@@ -34,6 +35,12 @@ class BaseClass
         $this->__pv('var1', 0);
     }
 
+    public function __destruct()
+    {
+        // удаление всех private проперти для текущего объекта
+        $this->__pv('', 0, true);
+    }
+
     // для инициализации статических проперти придётся сделать отдельную функцию
     public static function __init()
     {
@@ -63,7 +70,7 @@ class BaseClass
         // вывод: 0
         echo($this->__pv('var1').PHP_EOL);
 
-        // получаем private переменную var1 по ссылке. используйте это если у вас несколько операций с этим проперти
+        // получаем private проперти var1 по ссылке. используйте это если у вас несколько операций с этим проперти
         $var1 = &$this->__pv('var1');
 
         // меняем значение на 1
@@ -78,7 +85,7 @@ class BaseClass
         // вывод: 2
         echo(self::__pvs('var2').PHP_EOL);
 
-        // значение переменной можно установить через второй параметр. используйте это если у вас только одна операция с этим проперти
+        // значение проперти можно установить через второй параметр. используйте это если у вас только одна операция с этим проперти
         self::__pvs('var2', 3);
 
         // вывод: 3
@@ -115,7 +122,7 @@ BaseClass::privateStaticProperty();
 $r = new ReflectionMethod($c, '__pv');
 $r->setAccessible(true);
 try {
-    // установка значения 123 переменной var1 и вывод
+    // установка значения 123 для проперти var1 и вывод
     echo($r->invoke($c, 'var1', 123).PHP_EOL);
 } catch (Exception $e) {
     // этот текст не выведется, т.к. вызов методов ReflectionProtectProperty через ReflectionMethod приведёт к завершению скрипта
