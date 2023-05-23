@@ -18,6 +18,9 @@
 ## Пример использования
 **`main.php`**:
 ```php
+// определение поведения защиты по умолчанию (false - завершение скрипта, true - исключение)
+const REFLECTION_PROTECT_THROW = false;
+
 // подключение ReflectionProtect
 require('ReflectionProtect.php');
 

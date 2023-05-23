@@ -7,6 +7,9 @@
  * https://github.com/deathscore13/ReflectionProtect
  */
 
+if (!defined('REFLECTION_PROTECT_THROW'))
+    define('REFLECTION_PROTECT_THROW', false);  /**< Поведение защиты по умолчанию (false - завершение скрипта, true - исключение) */
+
 abstract class ReflectionProtect
 {
     /**
@@ -14,7 +17,7 @@ abstract class ReflectionProtect
      * 
      * @param bool $throw       false чтобы завершить скрипт, true чтобы вернуть исключение
      */
-    public static function method(bool $throw = false): void
+    public static function method(bool $throw = REFLECTION_PROTECT_THROW): void
     {
         static $exist = null;
 
@@ -59,7 +62,9 @@ trait ReflectionProtectObjectPrivate
      */
     private function __pvThrow(bool $value = false): bool
     {
-        static $throw = false;
+        ReflectionProtect::method();
+
+        static $throw = REFLECTION_PROTECT_THROW;
 
         if (func_num_args())
             $throw = $value;
@@ -115,7 +120,9 @@ trait ReflectionProtectObjectProtected
      */
     protected function __ptThrow(bool $value = false): bool
     {
-        static $throw = false;
+        ReflectionProtect::method();
+
+        static $throw = REFLECTION_PROTECT_THROW;
 
         if (func_num_args())
             $throw = $value;
@@ -171,7 +178,9 @@ trait ReflectionProtectStaticPrivate
      */
     private static function __pvsThrow(bool $value = false): bool
     {
-        static $throw = false;
+        ReflectionProtect::method();
+
+        static $throw = REFLECTION_PROTECT_THROW;
 
         if (func_num_args())
             $throw = $value;
@@ -214,7 +223,9 @@ trait ReflectionProtectStaticProtected
      */
     protected static function __ptsThrow(bool $value = false): bool
     {
-        static $throw = false;
+        ReflectionProtect::method();
+
+        static $throw = REFLECTION_PROTECT_THROW;
 
         if (func_num_args())
             $throw = $value;
