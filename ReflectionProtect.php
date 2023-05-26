@@ -77,35 +77,35 @@ trait ReflectionProtectObjectPrivate
      * 
      * @param string $name      Имя проперти
      * @param mixed $value      Если параметр указан, то установит новое значение
-     * @param bool $destroy     Удаление всех проперти для текущего объекта. НЕОБХОДИМО вызвать в __destruct()
+     * @param bool $destroy     Удаление проперти с именем $name для текущего объекта. НЕОБХОДИМО вызвать в __destruct()
      * 
-     * @return mixed            Значение проперти. При $destroy = true вернёт массив уничтоженных элементов
+     * @return mixed            Значение проперти. При $destroy = true вернёт значение проперти или null
      */
-	private function &__pv(string $name, mixed $value = 0, bool $destroy = false): mixed
-	{
-		ReflectionProtect::method($this->__pvThrow());
-		
-		static $var = [];
+    private function &__pv(string $name, mixed $value = 0, bool $destroy = false): mixed
+    {
+        ReflectionProtect::method($this->__pvThrow());
+        
+        static $var = [];
         $id = spl_object_id($this);
-		
-		if (func_num_args() === 2)
+        
+        if (func_num_args() === 2)
         {
-			$var[$id][$name] = $value;
+            $var[$id][$name] = $value;
         }
         else if ($destroy)
         {
-            $buffer = $var[$id];
-            unset($var[$id]);
+            $buffer = $var[$id][$name] ?? null;
+            unset($var[$id][$name]);
 
             return $buffer;
         }
-		else if (!isset($var[$id][$name]))
+        else if (!isset($var[$id][$name]))
         {
-			throw new Exception('Undefined property '.self::class.'::$'.$name);
+            throw new Exception('Undefined property '.self::class.'::$'.$name);
         }
-		
-		return $var[$id][$name];
-	}
+        
+        return $var[$id][$name];
+    }
 }
 
 trait ReflectionProtectObjectProtected
@@ -135,35 +135,35 @@ trait ReflectionProtectObjectProtected
      * 
      * @param string $name      Имя проперти
      * @param mixed $value      Если параметр указан, то установит новое значение
-     * @param bool $destroy     Удаление всех проперти для текущего объекта. НЕОБХОДИМО вызвать в __destruct()
+     * @param bool $destroy     Удаление проперти с именем $name для текущего объекта. НЕОБХОДИМО вызвать в __destruct()
      * 
-     * @return mixed            Значение проперти. При $destroy = true вернёт массив уничтоженных элементов
+     * @return mixed            Значение проперти. При $destroy = true вернёт значение проперти или null
      */
-	protected function &__pt(string $name, mixed $value = 0, bool $destroy = false): mixed
-	{
-		ReflectionProtect::method($this->__ptThrow());
-		
-		static $var = [];
+    protected function &__pt(string $name, mixed $value = 0, bool $destroy = false): mixed
+    {
+        ReflectionProtect::method($this->__ptThrow());
+        
+        static $var = [];
         $id = spl_object_id($this);
-		
-		if (func_num_args() === 2)
+        
+        if (func_num_args() === 2)
         {
-			$var[$id][$name] = $value;
+            $var[$id][$name] = $value;
         }
         else if ($destroy)
         {
-            $buffer = $var[$id];
-            unset($var[$id]);
+            $buffer = $var[$id][$name] ?? null;
+            unset($var[$id][$name]);
 
             return $buffer;
         }
-		else if (!isset($var[$id][$name]))
+        else if (!isset($var[$id][$name]))
         {
-			throw new Exception('Undefined property '.self::class.'::$'.$name);
+            throw new Exception('Undefined property '.self::class.'::$'.$name);
         }
-		
-		return $var[$id][$name];
-	}
+        
+        return $var[$id][$name];
+    }
 }
 
 trait ReflectionProtectStaticPrivate
@@ -193,22 +193,34 @@ trait ReflectionProtectStaticPrivate
      * 
      * @param string $name      Имя проперти
      * @param mixed $value      Если параметр указан, то установит новое значение
+     * @param bool $destroy     Удаление проперти с именем $name для текущего объекта
      * 
-     * @return mixed            Значение проперти
+     * @return mixed            Значение проперти. При $destroy = true вернёт значение проперти или null
      */
-	private static function &__pvs(string $name, mixed $value = 0): mixed
-	{
-		ReflectionProtect::method(self::__pvsThrow());
-		
-		static $var = [];
-		
-		if (func_num_args() === 2)
-			$var[$name] = $value;
-		else if (!isset($var[$name]))
-			throw new Exception('Undefined property '.self::class.'::$'.$name);
-		
-		return $var[$name];
-	}
+    private static function &__pvs(string $name, mixed $value = 0, bool $destroy = false): mixed
+    {
+        ReflectionProtect::method(self::__pvsThrow());
+        
+        static $var = [];
+        
+        if (func_num_args() === 2)
+        {
+            $var[$name] = $value;
+        }
+        else if ($destroy)
+        {
+            $buffer = $var[$name] ?? null;
+            unset($var[$name]);
+
+            return $buffer;
+        }
+        else if (!isset($var[$name]))
+        {
+            throw new Exception('Undefined property '.self::class.'::$'.$name);
+        }
+        
+        return $var[$name];
+    }
 }
 
 trait ReflectionProtectStaticProtected
@@ -238,22 +250,34 @@ trait ReflectionProtectStaticProtected
      * 
      * @param string $name      Имя проперти
      * @param mixed $value      Если параметр указан, то установит новое значение
+     * @param bool $destroy     Удаление проперти с именем $name для текущего объекта
      * 
-     * @return mixed            Значение проперти
+     * @return mixed            Значение проперти. При $destroy = true вернёт значение проперти или null
      */
-	protected static function &__pts(string $name, mixed $value = 0): mixed
-	{
-		ReflectionProtect::method(self::__ptsThrow());
-		
-		static $var = [];
-		
-		if (func_num_args() === 2)
-			$var[$name] = $value;
-		else if (!isset($var[$name]))
-			throw new Exception('Undefined property '.self::class.'::$'.$name);
-		
-		return $var[$name];
-	}
+    protected static function &__pts(string $name, mixed $value = 0, bool $destroy = false): mixed
+    {
+        ReflectionProtect::method(self::__ptsThrow());
+        
+        static $var = [];
+        
+        if (func_num_args() === 2)
+        {
+            $var[$name] = $value;
+        }
+        else if ($destroy)
+        {
+            $buffer = $var[$name] ?? null;
+            unset($var[$name]);
+
+            return $buffer;
+        }
+        else if (!isset($var[$name]))
+        {
+            throw new Exception('Undefined property '.self::class.'::$'.$name);
+        }
+        
+        return $var[$name];
+    }
 }
 
 trait ReflectionProtectProperty
