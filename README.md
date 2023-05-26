@@ -3,7 +3,7 @@
 
 `ReflectionProtect::method()` существует сам по себе, отдельно от трейтов для подключения проперти<br><br>
 Так как у `__pv()`, `__pt()`, `__pvs()` и `__pts()` разный буфер, то можно использовать одинаковые имена проперти<br><br>
-**ОБРАТИТЕ ВНИМАНИЕ, что для объектных private/protected проперти нужно вызывать `__pv()`/`__pt()` с параметром `$destruct` в `__destruct()`**<br><br>
+**ОБРАТИТЕ ВНИМАНИЕ, что для объектных private/protected проперти нужно вызывать `__pv()`/`__pt()` с параметром `$destroy` в `__destruct()`**<br><br>
 Советую открыть **`ReflectionProtect.php`** и почитать описания `ReflectionProtect::method()`, `__pvThrow()`, `__pv()`, `__ptThrow()`, `__pt()`, `__pvsThrow()`, `__pvs()`, `__ptsThrow()` и `__pts()`
 
 <br><br>
