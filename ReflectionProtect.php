@@ -7,17 +7,12 @@
  * https://github.com/deathscore13/ReflectionProtect
  */
 
-if (!defined('REFLECTION_PROTECT_THROW'))
-    define('REFLECTION_PROTECT_THROW', false);  /**< Поведение защиты по умолчанию (false - завершение скрипта, true - исключение) */
-
 abstract class ReflectionProtect
 {
     /**
      * Защита вызова метода через Reflection API
-     * 
-     * @param bool $throw       false чтобы завершить скрипт, true чтобы вернуть исключение
      */
-    public static function method(bool $throw = REFLECTION_PROTECT_THROW): void
+    public static function method(): void
     {
         static $exist = null;
 
@@ -39,39 +34,13 @@ abstract class ReflectionProtect
 
         $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         if (isset($bt[2]['class']) && $bt[2]['class'] === 'ReflectionMethod')
-        {
-            $err = 'ReflectionMethod is not allowed on '.$bt[1]['class'].'::'.$bt[1]['function'].'() method in '.
-                $bt[2]['file'].' on line '.$bt[2]['line'];
-            if ($throw)
-                throw new Exception($err);
-            else
-                exit($err);
-        }
+            throw new Exception('ReflectionMethod is not allowed on '.$bt[1]['class'].'::'.$bt[1]['function'].'() method in '.
+                $bt[2]['file'].' on line '.$bt[2]['line']);
     }
 }
 
 trait ReflectionProtectObjectPrivate
 {
-    /**
-     * Установка поведения при обнаружении вызова __pv() через Reflection API
-     * По умолчанию - false
-     * 
-     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
-     * 
-     * @return bool             Текущее значение
-     */
-    private function __pvThrow(bool $value = false): bool
-    {
-        ReflectionProtect::method();
-
-        static $throw = REFLECTION_PROTECT_THROW;
-
-        if (func_num_args())
-            $throw = $value;
-        
-        return $throw;
-    }
-
     /**
      * Установка/получение private проперти
      * 
@@ -83,7 +52,7 @@ trait ReflectionProtectObjectPrivate
      */
     private function &__pv(string $name, mixed $value = 0, bool $destroy = false): mixed
     {
-        ReflectionProtect::method($this->__pvThrow());
+        ReflectionProtect::method();
         
         static $var = [];
         $id = spl_object_id($this);
@@ -111,26 +80,6 @@ trait ReflectionProtectObjectPrivate
 trait ReflectionProtectObjectProtected
 {
     /**
-     * Установка поведения при обнаружении вызова __pt() через Reflection API
-     * По умолчанию - false
-     * 
-     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
-     * 
-     * @return bool             Текущее значение
-     */
-    protected function __ptThrow(bool $value = false): bool
-    {
-        ReflectionProtect::method();
-
-        static $throw = REFLECTION_PROTECT_THROW;
-
-        if (func_num_args())
-            $throw = $value;
-        
-        return $throw;
-    }
-
-    /**
      * Установка/получение protected проперти
      * 
      * @param string $name      Имя проперти
@@ -141,7 +90,7 @@ trait ReflectionProtectObjectProtected
      */
     protected function &__pt(string $name, mixed $value = 0, bool $destroy = false): mixed
     {
-        ReflectionProtect::method($this->__ptThrow());
+        ReflectionProtect::method();
         
         static $var = [];
         $id = spl_object_id($this);
@@ -169,26 +118,6 @@ trait ReflectionProtectObjectProtected
 trait ReflectionProtectStaticPrivate
 {
     /**
-     * Установка поведения при обнаружении вызова __pvs() через Reflection API
-     * По умолчанию - false
-     * 
-     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
-     * 
-     * @return bool             Текущее значение
-     */
-    private static function __pvsThrow(bool $value = false): bool
-    {
-        ReflectionProtect::method();
-
-        static $throw = REFLECTION_PROTECT_THROW;
-
-        if (func_num_args())
-            $throw = $value;
-        
-        return $throw;
-    }
-
-    /**
      * Установка/получение статической private проперти
      * 
      * @param string $name      Имя проперти
@@ -199,7 +128,7 @@ trait ReflectionProtectStaticPrivate
      */
     private static function &__pvs(string $name, mixed $value = 0, bool $destroy = false): mixed
     {
-        ReflectionProtect::method(self::__pvsThrow());
+        ReflectionProtect::method();
         
         static $var = [];
         
@@ -226,26 +155,6 @@ trait ReflectionProtectStaticPrivate
 trait ReflectionProtectStaticProtected
 {
     /**
-     * Установка поведения при обнаружении вызова __pts() через Reflection API
-     * По умолчанию - false
-     * 
-     * @param bool $value       false чтобы завершить скрипт, true чтобы вернуть исключение, пропуск - ничего не установится
-     * 
-     * @return bool             Текущее значение
-     */
-    protected static function __ptsThrow(bool $value = false): bool
-    {
-        ReflectionProtect::method();
-
-        static $throw = REFLECTION_PROTECT_THROW;
-
-        if (func_num_args())
-            $throw = $value;
-        
-        return $throw;
-    }
-
-    /**
      * Установка/получение статической protected проперти
      * 
      * @param string $name      Имя проперти
@@ -256,7 +165,7 @@ trait ReflectionProtectStaticProtected
      */
     protected static function &__pts(string $name, mixed $value = 0, bool $destroy = false): mixed
     {
-        ReflectionProtect::method(self::__ptsThrow());
+        ReflectionProtect::method();
         
         static $var = [];
         
