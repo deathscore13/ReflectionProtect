@@ -19,7 +19,7 @@
 **`main.php`**:
 ```php
 // подключение ReflectionProtect
-require('ReflectionProtect.php');
+require('ReflectionProtect/ReflectionProtect.php');
 
 class BaseClass
 {
