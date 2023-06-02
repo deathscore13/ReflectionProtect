@@ -15,6 +15,10 @@
 `use ReflectionProtectProperty;` - добавление всех типов проперти
 
 <br><br>
+## Наглядный пример использования
+1. [ClassAPIExtenstionRP](https://github.com/deathscore13/ClassAPIExtensionRP)
+
+<br><br>
 ## Пример использования
 **`main.php`**:
 ```php
